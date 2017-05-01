@@ -4,57 +4,132 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Calculator_try1
 {
-    class Variable
+    public class Variable
     {
         //Member variables
         public decimal Value = 0;
-        public decimal tempValue = 0;
+        public decimal tempValue1 = 0;
         public string illegalMsg = "";
-        int lastOperator = -1;
-        //public bool decimalFlag = false;
-               
+        int[] operators = new int[] { -1, -1 };
+        int turn = 0;        
+        bool firstTime = true;
+        //public bool decimalFlag = false;        
+
+        
+
+
         //Methods
         public void Assign(string num, int action)
         {
-            tempValue = Convert.ToDecimal(num);
-
-            if(action != 7)
+            turn++;
+            
+            if (firstTime)
             {
-                lastOperator = action;
-            }            
-
-            switch (action)
-            {
-                case 0:
-                    Add(tempValue);
-                    break;
-                case 1:
-                    Sub(tempValue);
-                    break;
-                case 2:
-                    Multiply(tempValue);
-                    break;
-                case 3:
-                    Divide(tempValue);
-                    break;
-                case 4:
-                    Percentage(tempValue);
-                    break;
-                case 5:
-                    Invert(tempValue);
-                    break;
-                case 6:
-                    Module(tempValue);
-                    break;
-                case 7:
-                    Compute();
-                    break;
-                default:
-                    Compute();
-                    break;
+                firstTime = false;
+                Value = Convert.ToDecimal(num);
+                operators[0] = action;
             }
+            else
+            {
+                if((turn % 2) == 0)
+                {
+                    operators[1] = action;
+                    tempValue1 = Convert.ToDecimal(num);
+                }
+                else
+                {
+                    operators[0] = action;
+                    tempValue1 = Convert.ToDecimal(num);
+                }
+            }
+
+            //Incase of computation
+            if (action == 7)
+            {
+                Compute();
+            }
+            //Taking action based on turn number
+            //Even - use action of operation[0] (to use previously saved action)
+            if ((turn % 2) == 0 && turn != 1)
+            {
+                switch (operators[0])
+                {
+                    case 0:
+                        Add(tempValue1);
+                        break;
+                    case 1:
+                        Sub(tempValue1);
+                        break;
+                    case 2:
+                        Multiply(tempValue1);
+                        break;
+                    case 3:
+                        Divide(tempValue1);
+                        break;
+                    case 4:
+                        //Percentage(tempValue1);
+                        break;
+                    case 5:
+                        //Invert(tempValue1);
+                        break;
+                    case 6:
+                        Module(tempValue1);
+                        break;
+                    default:
+                        Compute();
+                        break;
+                }
+            }
+            else if ((turn % 2) == 1 && turn != 1)
+            {
+                //Odd - use action of operation[1] (to use previously saved action)
+                switch (operators[1])
+                {
+                    case 0:
+                        Add(tempValue1);
+                        break;
+                    case 1:
+                        Sub(tempValue1);
+                        break;
+                    case 2:
+                        Multiply(tempValue1);
+                        break;
+                    case 3:
+                        Divide(tempValue1);
+                        break;
+                    case 4:
+                        //Percentage(tempValue1);
+                        break;
+                    case 5:
+                        //Invert(tempValue1);
+                        break;
+                    case 6:
+                        Module(tempValue1);
+                        break;
+                    default:
+                        Compute();
+                        break;
+                }
+            }
+
+
+            //if(num == "")
+            //{
+                                
+            //}
+            //else
+            //{
+            //    tempValue1 = Convert.ToDecimal(num);
+            //    operatorInUse = action;
+            //}
+            
+
+                   
+
+            
                 
 
             
@@ -79,65 +154,62 @@ namespace Calculator_try1
             Value+= num;
         }
         public void Sub(decimal num)
-        {
-            //handling first number
-            if(Value == 0)
-            {
-                Value += num;
-            }
-            else
-            {
-                Value -= num;
-            }
-            
+        {         
+            Value -= num;                        
         }
         public void Multiply(decimal num)
-        {
-            if(Value == 0)
-            {
-                Value = num;
-            }
-            else
-            {
-                Value *= num;
-            }
-            
+        {            
+            Value *= num;                       
         }
         public void Divide(decimal num)
         {
-            if(num == 0)
+            if (num == 0)
             {
-                illegalMsg = "Division by Zero is not allowed!";
+                illegalMsg = "Division by Zero is not allowed!";                
             }
             else
             {
-                Value /= num;
+                Value /= num;                                
             }
             
         }
-        public void Percentage(decimal num)
-        {
-            Value *= (num / 100);
-        }
-        public void Invert(decimal num)
-        {
-            tempValue = -(num);
-        }
+        //public void Percentage(decimal num)
+        //{
+        //    if(Value == 0)
+        //    {
+        //        Value = num / 100;
+        //    }
+        //    Value *= (num / 100);
+        //}
+        //public void Invert(decimal num)
+        //{
+        //    if(Value == 0)
+        //    {
+        //        Value = -(num);
+        //    }
+        //    else
+        //    {
+        //        tempValue1 = -(num);
+        //    }
+            
+        //}
         public void Module(decimal num)
         {
             Value %= num;
         }
         public decimal Compute()
-        {
-            if(lastOperator != -1)
-            {
-                Assign(tempValue.ToString(), lastOperator);
-            }
+        {            
             return Value;
         }
         public void Reset()
         {
             Value = 0;
+            tempValue1 = 0;
+            firstTime = true;
+            turn = 0;
+            operators[0] = -1;
+            operators[1] = -1;
+            illegalMsg = "";
         }
 
 

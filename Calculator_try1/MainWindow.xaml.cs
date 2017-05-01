@@ -66,6 +66,10 @@ namespace Calculator_try1
             mainValue.Assign(currentValue, 3);
             //copy the current value to the text value to send it to screem
             updateTextWithOperator(" / ");
+            if(mainValue.illegalMsg != "")
+            {
+                updateText(mainValue.illegalMsg);
+            }
             
 
         }
@@ -82,9 +86,9 @@ namespace Calculator_try1
 
         private void btnSign_Click(object sender, RoutedEventArgs e)
         {
-            mainValue.Assign(currentValue, 5);
+            currentValue = "-"+currentValue;
             //copy the current value to the text value to send it to screem
-            updateTextWithOperator("(-)");
+            updateText("(-)");
             
 
         }
@@ -101,7 +105,15 @@ namespace Calculator_try1
         private void btnEqu_Click(object sender, RoutedEventArgs e)
         {
             mainValue.Assign(currentValue, 7);
-            txtResult.Text = "= " + mainValue.Value.ToString();            
+            if (mainValue.illegalMsg != "")
+            {
+                txtResult.Text = mainValue.illegalMsg;
+            }
+            else
+            {
+                txtResult.Text = "= " + mainValue.Value.ToString();
+            }
+            
         }
 
         private void btn7_Click(object sender, RoutedEventArgs e)
